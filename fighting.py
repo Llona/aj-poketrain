@@ -3,6 +3,21 @@ from settings import SkillEnum
 from time import sleep
 import random
 import datetime
+from os import system
+
+
+log_line = 0
+
+
+def print_log(message):
+    if not settings.DEBUG:
+        global log_line
+        # print(log_line)
+        if log_line > settings.PRINT_LINE:
+            system('cls')
+            log_line = 0
+        log_line += 1
+    print(message)
 
 
 class Bcolors:
@@ -21,7 +36,7 @@ class Monster(object):
 
     def config_skill(self, monster_data):
         if len(monster_data) > 1:
-            print('error! monster data format is error')
+            print_log('error! monster data format is error')
             raise
 
         for k, v in monster_data.items():
@@ -44,7 +59,7 @@ class Monster(object):
         skill_take_time = skill_data[0]
         skill_add_energy = skill_data[1]
 
-        log_str = Bcolors.MESSAGE + self.monster_name+Bcolors.RESET+" 使用招式: "+Bcolors.MESSAGE+skill_name+Bcolors.RESET
+        log_str = Bcolors.MESSAGE+self.monster_name+Bcolors.RESET+" 使用招式: "+Bcolors.MESSAGE+skill_name+Bcolors.RESET
 
         if settings.DEBUG:
             log_str = log_str + \
@@ -56,20 +71,13 @@ class Monster(object):
                       str(skill_add_energy) + \
                       Bcolors.RESET
 
-        print(log_str)
-        # print(bcolors.MESSAGE+self.monster_name +
-        #       bcolors.RESET+" 使用招式: " +
-        #       bcolors.MESSAGE+skill_name +
-        #       bcolors.RESET+" 花費時間: " +
-        #       bcolors.MESSAGE+str(skill_take_time) +
-        #       bcolors.RESET+" 秒"+" 能量 " +
-        #       bcolors.MESSAGE+str(skill_add_energy)+bcolors.RESET)
+        print_log(log_str)
 
         sleep(skill_take_time)
         self.energy += skill_add_energy
 
         if settings.DEBUG:
-            print(self.monster_name + " 目前能量 " + str(self.energy))
+            print_log(self.monster_name + " 目前能量 " + str(self.energy))
 
 
 class Fighting(object):
@@ -85,9 +93,9 @@ class Fighting(object):
     def start_fighting(self):
         self.monster_all_num = len(self.monster_class_list)
         # self.print_log(self.monster_all_num)
-        print("開始戰鬥")
+        print_log("開始戰鬥")
         self.choice_monster_random()
-        print(self.monster_activate.monster_name)
+        print_log(self.monster_activate.monster_name)
 
         start_time = datetime.datetime.now()
         while True:
@@ -95,9 +103,9 @@ class Fighting(object):
             is_monster_change = self.choice_monster_random()
             if is_monster_change:
                 # print()
-                print(Bcolors.WARNING+'*****************'+Bcolors.RESET)
-                print(Bcolors.WARNING+"切換: " + Bcolors.FAIL + self.monster_activate.monster_name + Bcolors.RESET)
-                print(Bcolors.WARNING+'*****************'+Bcolors.RESET)
+                # self.print_log(Bcolors.WARNING+'*****************'+Bcolors.RESET)
+                print_log(Bcolors.WARNING+"切換: "+Bcolors.FAIL+self.monster_activate.monster_name+Bcolors.RESET)
+                # self.print_log(Bcolors.WARNING+'*****************'+Bcolors.RESET)
                 # print()
 
             if self.is_time_up(start_time):
@@ -109,10 +117,11 @@ class Fighting(object):
         now_time = datetime.datetime.now()
         count_time = (now_time - start_time).seconds
         if settings.DEBUG:
-            print("測驗秒數%s, 已經過%s 秒" % (self.ask_time_sec, count_time))
+            print_log("測驗秒數%s, 已經過%s 秒" % (self.ask_time_sec, count_time))
 
         if count_time >= self.ask_time_sec:
-            print("戰鬥停止")
+            if settings.DEBUG:
+                print_log("Time up")
             return True
         return False
 
@@ -162,7 +171,3 @@ class Fighting(object):
         for i in self.monster_class_list:
             monster_name.append(i.monster_name)
         return monster_name
-
-    @staticmethod
-    def print_log(message):
-        print(message)

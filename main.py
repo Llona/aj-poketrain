@@ -5,6 +5,7 @@ from fighting import Fighting
 import random
 import os
 import sys
+from time import sleep
 
 
 class Init(object):
@@ -37,15 +38,6 @@ class Init(object):
 
     @staticmethod
     def init_parameter():
-        # print(settings.DEBUG,
-        #       settings.ASK_TIME_MIN,
-        #       settings.ASK_TIME_MAX,
-        #       settings.CHANGE_MONSTER_WEIGHT,
-        #       settings.NO_CHANGE_MONSTER_WEIGHT,
-        #       settings.GENERAL_SKILL_WEIGHT,
-        #       settings.SPECIAL_SKILL_1_WEIGHT,
-        #       settings.SPECIAL_SKILL_2_WEIGHT)
-
         ini_h = utils.IniControl(settings.SETTING_PATH)
         debug_mode = int(ini_h.read_config(
             IniEnum.GENERAL_SECTION.value, IniEnum.DEBUG_MODE.value))
@@ -55,6 +47,8 @@ class Init(object):
         else:
             settings.DEBUG = False
 
+        settings.PRINT_LINE = int(ini_h.read_config(
+            IniEnum.GENERAL_SECTION.value, IniEnum.PRINT_LINE_KEY.value))
         settings.ASK_TIME_MIN = int(ini_h.read_config(
             IniEnum.GENERAL_SECTION.value, IniEnum.ASK_TIME_MIN_KEY.value))
         settings.ASK_TIME_MAX = int(ini_h.read_config(
@@ -119,7 +113,9 @@ class CLI(object):
 
     @staticmethod
     def test_user_for_energy(activate_monster):
-        print("請輸入 "+activate_monster.monster_name+" 目前能量:")
+        sleep(1)
+        os.system("cls")
+        print("戰鬥停止, 請輸入 "+activate_monster.monster_name+" 目前能量:")
         user_input = input()
         if int(user_input) != activate_monster.energy:
             print("答錯了, 正確答案是: "+str(activate_monster.energy))

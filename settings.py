@@ -10,6 +10,7 @@ SETTING_PATH = path.join(sys.path[0], SETTING_FILENAME)
 
 
 DEBUG = False
+PRINT_LINE = 0
 
 ASK_TIME_MIN = 0
 ASK_TIME_MAX = 0
@@ -25,6 +26,7 @@ SPECIAL_SKILL_2_WEIGHT = 0
 class IniEnum(enum.Enum):
     GENERAL_SECTION = 'General'
     DEBUG_MODE = 'debug'
+    PRINT_LINE_KEY = 'print_line'
     ASK_TIME_MIN_KEY = 'test_time_min'
     ASK_TIME_MAX_KEY = 'test_time_max'
     CHANGE_MONSTER_WEIGHT_KEY = 'change_monster_weight'
